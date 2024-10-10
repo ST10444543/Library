@@ -190,7 +190,7 @@
 
     <div id="userProfile" class="screen hidden">
         <h1>User Profile</h1>
-        <img id="userImage" src="Image/ompha.jpeg" alt="User Image">
+        <img id="userImage" src="Image/user-placeholder.png" alt="User Image">
         <p>Name: <span id="profileName"></span></p>
         <p>Student Number: <span id="profileStudentNumber"></span></p>
         <p>Password: <span id="profilePassword"></span></p>
@@ -198,8 +198,8 @@
         <select id="profileImageSelect" onchange="updateProfileImage()">
             <option value="Image/user-placeholder.png">Default Image</option>
             <option value="Image/ompha.jpeg">Image 1</option>
-            <option value="Image/user2.png">Image 2</option>
-            <option value="Image/user3.png">Image 3</option>
+            <option value="Image/magau.jpeg">Image 2</option>
+            <option value="Image/oscar.jpeg">Image 3</option>
         </select>
         <button onclick="goBack()">Back</button>
     </div>
@@ -216,8 +216,8 @@
 <script>
     const validLogins = [
         { studentNumber: '231097074', pin: '54520', name: 'ompha' },
-        { studentNumber: '233751644', pin: '12536', name: 'magau' },
-        { studentNumber: '231098084', pin: '23189', name: 'Charlie Brown' },
+        { studentNumber: '231098084', pin: '23189', name: 'magau' },
+        { studentNumber: '235455074', pin: '20156', name: 'oscar' },
     ];
 
     let selectedCampus = '';
