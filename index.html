@@ -3,310 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Selection App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Book Availability App</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background: url('./image/background.jpg') no-repeat center center fixed;
-            background-size: cover;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            color: #333;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        .container {
-            width: 90%;
-            max-width: 600px;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            display: none; /* Initially hidden */
-        }
-        .active {
-            display: block; /* Show active container */
-        }
-        .title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #007bff;
-        }
-        .input, .picker {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border: 2px solid #007bff;
+        #app {
+            background: white;
+            padding: 20px;
             border-radius: 10px;
-            background-color: #f9f9f9;
-            transition: border-color 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            overflow: hidden;
         }
-        .input:focus, .picker:focus {
-            border-color: #0056b3;
-            outline: none;
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
         }
-        .button {
+        input, select, textarea {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
             background-color: #007bff;
             color: white;
-            padding: 12px;
             border: none;
             border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            width: 100%;
         }
-        .button:hover {
+        button:hover {
             background-color: #0056b3;
         }
-        .book-card {
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 2px solid #007bff;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .book-image {
-            width: 100px;
-            height: 150px;
-            margin-bottom: 10px;
-        }
-        .no-books-text {
-            color: #ff0000;
-        }
-        /* Hamburger menu styles */
-        .hamburger {
+        .hidden {
             display: none;
-            flex-direction: column;
-            cursor: pointer;
-            z-index: 10;
         }
-        .line {
-            height: 3px;
-            width: 25px;
-            background-color: #007bff;
-            margin: 4px 0;
-        }
-        /* Navigation styles */
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        img {
             width: 100%;
-            padding: 15px 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            position: absolute;
-            top: 0;
-            left: 0;
+            max-width: 150px;
+            margin-bottom: 20px;
+            border-radius: 5px;
         }
-        .nav-links {
+        .book-item, .basket-item {
+            margin: 10px 0;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .basket-item {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
         }
-        .nav-link {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-            transition: color 0.3s;
+        .basket-item img {
+            width: 50px;
+            height: 70px;
+            margin-right: 10px;
         }
-        .nav-link:hover {
-            color: #0056b3;
+        #menu {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
+        #menu-content {
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+        #menu-content button {
+            width: auto;
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #menu-content button:hover {
+            background-color: #e0e0e0;
+        }
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 20px;
             }
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                right: 10px;
-                background-color: white;
-                border-radius: 5px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-                z-index: 1;
-                padding: 10px;
-            }
-            .nav-links.active {
-                display: flex;
+            button, input, select, textarea {
+                font-size: 14px;
+                padding: 8px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="nav">
-        <div class="hamburger" onclick="toggleMenu()">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-        </div>
-        <div class="nav-links" id="navLinks">
-            <a href="#" class="nav-link" onclick="showContainer('login')">Login</a>
-            <a href="#" class="nav-link" onclick="showContainer('bookAvailability')">Available Books</a>
-            <a href="#" class="nav-link" onclick="showContainer('basket')">Your Basket</a>
-            <a href="#" class="nav-link" onclick="showContainer('review')">Leave a Review</a>
-        </div>
-    </div>
 
-    <div id="login" class="container active">
-        <img src="image/logo.png" alt="Logo" style="width: 120px; height: 120px; margin-bottom: 20px;">
-        <h1 class="title">Login</h1>
-        <select id="role" class="picker">
+<div id="app">
+    <img src="Image/logo.png" alt="Logo">
+    <div id="login" class="screen">
+        <h1>Login</h1>
+        <select id="role">
             <option value="student">Student</option>
             <option value="admin">Admin</option>
         </select>
-        <input type="text" id="studentNumber" placeholder="Student Number" class="input">
-        <input type="password" id="pin" placeholder="Pin" class="input">
-        <button class="button" onclick="handleLogin()">Login</button>
+        <input type="text" id="studentNumber" placeholder="Student Number" required>
+        <input type="password" id="pin" placeholder="Pin" required>
+        <button onclick="handleLogin()">Login</button>
     </div>
 
-    <div id="bookAvailability" class="container">
-        <h1 class="title">Available Books</h1>
-        <div id="bookList"></div>
-        <button class="button" onclick="handleReview()">Leave a Review</button>
-        <button class="button" onclick="handleBasket()">View Basket</button>
+    <div id="campusSelection" class="screen hidden">
+        <h1>Select Your Campus</h1>
+        <select id="campus">
+            <option value="">Select Campus</option>
+            <option value="main">TUT Main Campus</option>
+            <option value="sosha_south">Sosha South Campus</option>
+            <option value="sosha_north">Sosha North Campus</option>
+            <option value="plk">Polokwane Campus</option>
+            <option value="emalahleni">Emalahleni Campus</option>
+            <option value="arcadia">Arcadia Campus</option>
+            <option value="arts">Arts Campus</option>
+        </select>
+        <button onclick="handleCampusSelection()">Next</button>
     </div>
 
-    <div id="review" class="container">
-        <h1 class="title">Leave a Review</h1>
-        <textarea id="reviewText" class="input" placeholder="Write your review..."></textarea>
-        <button class="button" onclick="submitReview()">Submit Review</button>
-        <button class="button" onclick="goBack()">Back to Books</button>
+    <div id="facultySelection" class="screen hidden">
+        <h1>Select Faculty</h1>
+        <select id="faculty">
+            <option value="">Select Faculty</option>
+            <option value="ict">ICT Faculty</option>
+            <option value="humanities">Humanities Faculty</option>
+        </select>
+        <button onclick="handleFacultySelection()">Next</button>
     </div>
 
-    <div id="basket" class="container">
-        <h1 class="title">Your Basket</h1>
+    <div id="courseSelection" class="screen hidden">
+        <h1>Select Your Course</h1>
+        <select id="course">
+            <option value="">Select Course</option>
+        </select>
+        <button onclick="handleCourseSelection()">Next</button>
+    </div>
+
+    <div id="bookAvailability" class="screen hidden">
+        <h1>Available Books</h1>
+        <div id="bookList" class="book-list"></div>
+        <button onclick="handleReview()">Leave a Review</button>
+        <button onclick="viewBasket()">View Basket</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <div id="review" class="screen hidden">
+        <h1>Leave a Review</h1>
+        <textarea id="reviewText" placeholder="Write your review..."></textarea>
+        <button onclick="submitReview()">Submit Review</button>
+        <button onclick="goBack()">Back to Books</button>
+    </div>
+
+    <div id="basket" class="screen hidden">
+        <h1>Your Basket</h1>
         <div id="basketList"></div>
-        <button class="button" onclick="goBack()">Back to Books</button>
+        <button onclick="goBack()">Back to Books</button>
+        <button onclick="logout()">Logout</button>
     </div>
 
-    <script>
-        const validLogins = [
-            { studentNumber: '231097074', pin: '54520' },
-            { studentNumber: '233751644', pin: '12536' },
-            { studentNumber: '231098084', pin: '23189' },
-        ];
+    <div id="userProfile" class="screen hidden">
+        <h1>User Profile</h1>
+        <img id="userImage" src="Image/ompha.jpeg" alt="User Image">
+        <p>Name: <span id="profileName"></span></p>
+        <p>Student Number: <span id="profileStudentNumber"></span></p>
+        <p>Password: <span id="profilePassword"></span></p>
+        <h3>Select Profile Image:</h3>
+        <select id="profileImageSelect" onchange="updateProfileImage()">
+            <option value="Image/user-placeholder.png">Default Image</option>
+            <option value="Image/ompha.jpeg">Image 1</option>
+            <option value="Image/user2.png">Image 2</option>
+            <option value="Image/user3.png">Image 3</option>
+        </select>
+        <button onclick="goBack()">Back</button>
+    </div>
+</div>
 
-        let selectedCourse = '';
-        const books = [
-            { id: 1, title: 'CHOF05D - Introduction to IT', available: true, image: './image/DesignBasics.jpeg' },
-            { id: 2, title: 'CHLF05D - Advanced Programming', available: true, image: './image/DesignBasics.jpeg' },
-            { id: 3, title: 'COEF05X - Computer Networks', available: false, image: './image/ComputerNetworking.jpeg' },
-            { id: 4, title: 'History 101', available: true, image: './image/DesignBasics.jpeg' },
-            { id: 5, title: 'Sociology 101', available: true, image: './image/DesignBasics.jpeg' },
-        ];
-        const basket = [];
+<div id="menu">
+    ☰
+</div>
+<div id="menu-content">
+    <button onclick="showProfile()">Profile</button>
+    <button onclick="logout()">Logout</button>
+</div>
 
-        function showContainer(containerId) {
-            document.querySelectorAll('.container').forEach(container => {
-                container.classList.remove('active');
-            });
-            document.getElementById(containerId).classList.add('active');
-            toggleMenu(); // Close menu when changing container
+<script>
+    const validLogins = [
+        { studentNumber: '231097074', pin: '54520', name: 'ompha' },
+        { studentNumber: '233751644', pin: '12536', name: 'magau' },
+        { studentNumber: '231098084', pin: '23189', name: 'Charlie Brown' },
+    ];
+
+    let selectedCampus = '';
+    let selectedFaculty = '';
+    let selectedCourse = '';
+    let basket = [];
+    let loggedInStudent = null;
+
+    const allBooks = [
+        { id: 1, title: 'CHOF05D - Introduction to IT', image: 'Image/DatabaseConcepts.jpeg', available: true },
+        { id: 2, title: 'CHLF05D - Advanced Programming', image: 'Image/DesignBasics.jpeg', available: false },
+        { id: 3, title: 'COEF05X - Computer Networks', image: 'Image/ComputerNetworking.jpeg', available: false },
+        { id: 4, title: 'INFF25D - Information Security', image: 'Image/Management.jpeg', available: true },
+        { id: 5, title: 'CSMO01 - Introduction to Computer Science', image: 'Image/StructuralAnalysis.jpeg', available: false },
+        { id: 6, title: 'CSMO02 - Advanced Computer Science', image: 'Image/ComputerNetworking.jpeg', available: true },
+    ];
+
+    function handleLogin() {
+        const studentNumber = document.getElementById('studentNumber').value;
+        const pin = document.getElementById('pin').value;
+        const role = document.getElementById('role').value;
+
+        const validLogin = validLogins.find(login => login.studentNumber === studentNumber && login.pin === pin);
+
+        if (validLogin && role === 'student') {
+            loggedInStudent = validLogin;
+            document.getElementById('login').classList.add('hidden');
+            document.getElementById('campusSelection').classList.remove('hidden');
+        } else {
+            alert('Invalid Credentials. Please check your student number and pin.');
         }
+    }
 
-        function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('active');
+    function handleCampusSelection() {
+        selectedCampus = document.getElementById('campus').value;
+        if (selectedCampus) {
+            document.getElementById('campusSelection').classList.add('hidden');
+            document.getElementById('facultySelection').classList.remove('hidden');
+        } else {
+            alert('Please select a campus.');
         }
+    }
 
-        function handleLogin() {
-            const studentNumber = document.getElementById('studentNumber').value;
-            const pin = document.getElementById('pin').value;
-            const isValid = validLogins.some(login => login.studentNumber === studentNumber && login.pin === pin);
-            if (isValid) {
-                showContainer('bookAvailability');
-                displayBooks(); // Show available books after login
-            } else {
-                alert('Invalid Credentials. Please check your student number and pin.');
-            }
+    function handleFacultySelection() {
+        selectedFaculty = document.getElementById('faculty').value;
+        if (selectedFaculty) {
+            document.getElementById('facultySelection').classList.add('hidden');
+            document.getElementById('courseSelection').classList.remove('hidden');
+            populateCourses();
+        } else {
+            alert('Please select a faculty.');
         }
+    }
 
-        function displayBooks() {
-            const bookList = document.getElementById('bookList');
-            bookList.innerHTML = '';
-            books.forEach(book => {
-                const bookCard = document.createElement('div');
-                bookCard.className = 'book-card';
-                bookCard.innerHTML = `
-                    <img src="${book.image}" alt="Book" class="book-image">
-                    <h2>${book.title}</h2>
-                    <p>${book.available ? 'Available' : 'Not Available'}</p>
-                    <button class="button" onclick="addToBasket(${book.id})" ${!book.available ? 'disabled' : ''}>Add to Basket</button>
-                `;
-                bookList.appendChild(bookCard);
-            });
-            if (!bookList.children.length) {
-                bookList.innerHTML = '<p class="no-books-text">No available books.</p>';
-            }
-        }
+    function populateCourses() {
+        const courseSelect = document.getElementById('course');
+        courseSelect.innerHTML = '<option value="">Select Course</option>';
 
-        function addToBasket(bookId) {
-            const book = books.find(b => b.id === bookId);
-            if (book && book.available) {
-                basket.push(book);
-                alert(`${book.title} has been added to your basket.`);
-            }
-        }
+        const courseOptions = {
+            ict: [
+                { label: 'Information Technology', value: 'it' },
+                { label: 'Computer Science', value: 'cs' },
+                { label: 'Informatics', value: 'informatics' },
+                { label: 'Computer Systems', value: 'comp_systems' },
+                { label: 'Media Studies', value: 'media' },
+            ],
+            humanities: [
+                { label: 'History', value: 'history' },
+                { label: 'Sociology', value: 'sociology' },
+                { label: 'Linguistics', value: 'linguistics' },
+            ],
+        };
 
-        function handleBasket() {
-            const basketList = document.getElementById('basketList');
-            basketList.innerHTML = '';
-            if (basket.length === 0) {
-                basketList.innerHTML = '<p class="no-books-text">Your basket is empty.</p>';
-            } else {
-                basket.forEach(book => {
-                    const bookCard = document.createElement('div');
-                    bookCard.className = 'book-card';
-                    bookCard.innerHTML = `
-                        <img src="${book.image}" alt="Book" class="book-image">
-                        <h2>${book.title}</h2>
-                        <button class="button" onclick="removeFromBasket(${book.id})">Remove</button>
-                    `;
-                    basketList.appendChild(bookCard);
-                });
-            }
-            showContainer('basket'); // Switch to basket view
-        }
-
-        function removeFromBasket(bookId) {
-            const index = basket.findIndex(b => b.id === bookId);
-            if (index > -1) {
-                basket.splice(index, 1);
-                handleBasket(); // Refresh basket view
-            }
-        }
-
-        function handleReview() {
-            showContainer('review');
-        }
-
-        function submitReview() {
-            const reviewText = document.getElementById('reviewText').value;
-            if (reviewText) {
-                alert(`Thank you for your review: "${reviewText}"`);
-                document.getElementById('reviewText').value = '';
-                showContainer('bookAvailability'); // Go back to available books after submission
-            } else {
-                alert('Please write a review before submitting.');
-            }
-        }
-
-        function goBack() {
-            showContainer('bookAvailability'); // Switch back to book availability
-        }
-
-        // Automatically show available books after login
-        document.addEventListener('DOMContentLoaded', () => {
-            displayBooks();
+        (courseOptions[selectedFaculty] || []).forEach(option => {
+            const newOption = document.createElement('option');
+            newOption.value = option.value;
+            newOption.textContent = option.label;
+            courseSelect.appendChild(newOption);
         });
-    </script>
+    }
+
+    function handleCourseSelection() {
+        selectedCourse = document.getElementById('course').value;
+        if (selectedCourse) {
+            document.getElementById('courseSelection').classList.add('hidden');
+            document.getElementById('bookAvailability').classList.remove('hidden');
+            displayBooks();
+        } else {
+            alert('Please select a course.');
+        }
+    }
+
+    function displayBooks() {
+        const bookList = document.getElementById('bookList');
+        bookList.innerHTML = '';
+
+        allBooks.forEach(book => {
+            const bookItem = document.createElement('div');
+            bookItem.className = 'book-item';
+            bookItem.innerHTML = `
+                <img src="${book.image}" alt="${book.title}">
+                <p>${book.title}</p>
+                <p>${book.available ? 'Available' : 'Out of Stock'}</p>
+                <button ${book.available ? '' : 'disabled'} onclick="addToBasket(${book.id})">${book.available ? 'Add to Basket' : 'Out of Stock'}</button>
+            `;
+            bookList.appendChild(bookItem);
+        });
+    }
+
+    function addToBasket(bookId) {
+        const book = allBooks.find(b => b.id === bookId);
+        if (book && book.available) {
+            basket.push(book);
+            alert(`${book.title} has been added to your basket.`);
+        }
+    }
+
+    function handleReview() {
+        document.getElementById('bookAvailability').classList.add('hidden');
+        document.getElementById('review').classList.remove('hidden');
+    }
+
+    function submitReview() {
+        const reviewText = document.getElementById('reviewText').value;
+        if (reviewText.trim()) {
+            alert(`Your review: "${reviewText}" has been submitted.`);
+            document.getElementById('reviewText').value = '';
+            goBack();
+        } else {
+            alert('Please enter a review before submitting.');
+        }
+    }
+
+    function viewBasket() {
+        document.getElementById('bookAvailability').classList.add('hidden');
+        document.getElementById('basket').classList.remove('hidden');
+        displayBasket();
+    }
+
+    function displayBasket() {
+        const basketList = document.getElementById('basketList');
+        basketList.innerHTML = '';
+
+        if (basket.length > 0) {
+            basket.forEach(book => {
+                const basketItem = document.createElement('div');
+                basketItem.classList.add('basket-item');
+                basketItem.innerHTML = `
+                    <img src="${book.image}" alt="${book.title}">
+                    <h4>${book.title}</h4>
+                `;
+                basketList.appendChild(basketItem);
+            });
+        } else {
+            basketList.innerHTML = '<p>No books in your basket.</p>';
+        }
+    }
+
+    function goBack() {
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(screen => screen.classList.add('hidden'));
+        document.getElementById('bookAvailability').classList.remove('hidden');
+    }
+
+    function logout() {
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(screen => screen.classList.add('hidden'));
+        document.getElementById('login').classList.remove('hidden');
+        // Reset selections
+        selectedCampus = '';
+        selectedFaculty = '';
+        selectedCourse = '';
+        basket = [];
+        loggedInStudent = null; // Reset logged-in student info
+        document.getElementById('studentNumber').value = '';
+        document.getElementById('pin').value = '';
+        document.getElementById('course').innerHTML = '<option value="">Select Course</option>';
+        document.getElementById('basketList').innerHTML = '';
+    }
+
+    function showProfile() {
+        if (loggedInStudent) {
+            document.getElementById('profileName').textContent = loggedInStudent.name;
+            document.getElementById('profileStudentNumber').textContent = loggedInStudent.studentNumber;
+            document.getElementById('profilePassword').textContent = loggedInStudent.pin;
+            document.getElementById('userProfile').classList.remove('hidden');
+            const screens = document.querySelectorAll('.screen:not(#userProfile)');
+            screens.forEach(screen => screen.classList.add('hidden'));
+        }
+    }
+
+    function updateProfileImage() {
+        const imageSelect = document.getElementById('profileImageSelect');
+        document.getElementById('userImage').src = imageSelect.value;
+    }
+
+    // Hamburger Menu Functionality
+    document.getElementById('menu').onclick = function() {
+        const menuContent = document.getElementById('menu-content');
+        menuContent.style.display = menuContent.style.display === 'block' ? 'none' : 'block';
+    };
+
+    // Close menu when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('#menu')) {
+            const menuContent = document.getElementById('menu-content');
+            if (menuContent.style.display === 'block') {
+                menuContent.style.display = 'none';
+            }
+        }
+    };
+</script>
+
 </body>
 </html>
